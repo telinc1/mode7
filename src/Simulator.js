@@ -10,6 +10,9 @@ export class Simulator {
         }
 
         this.renderer = new CanvasRenderer(this, canvas);
+
+        this.onTilemapLoad = this.render.bind(this);
+        this.tilemap.addEventListener("load", this.onTilemapLoad);
     }
 
     render(){

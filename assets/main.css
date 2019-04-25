@@ -2,16 +2,17 @@
     image-rendering: pixelated;
 }
 
-.tilemap-choices {
+[id="tilemap-choices"] {
     padding: 0;
     list-style: none;
 }
 
-.tilemap-choices li {
+[id="tilemap-choices"] li {
     float: left;
+    margin-right: 1em;
 }
 
-.tilemap-choices img {
+[id="tilemap-choices"] img {
     width: 128px;
-    margin-right: 1em;
+    cursor: pointer;
 }
