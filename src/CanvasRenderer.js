@@ -13,6 +13,12 @@ export class CanvasRenderer {
     }
 
     render(){
-        this.context.drawImage(this.simulator.tilemap, 0, 0);
+        const {transform} = this.simulator;
+
+        for(let y = 0; y < 224; y++){
+            for(let x = 0; x < 256; x++){
+                this.context.drawImage(this.simulator.tilemap, ...transform(undefined, x, y), 1, 1, x, y, 1, 1);
+            }
+        }
     }
 }

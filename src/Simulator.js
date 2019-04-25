@@ -1,6 +1,17 @@
 import {CanvasRenderer} from "./CanvasRenderer";
 import {GetElement} from "./GetElement";
 
+const TEMP_ENTRY = {
+    matrixA: 1.1796875,
+    matrixB: 0.17578125,
+    matrixC: -0.23046875,
+    matrixD: 1.52734375,
+    offsetX: 224,
+    offsetY: 401,
+    centerX: 442,
+    centerY: 432
+};
+
 export class Simulator {
     constructor(tilemap, canvas){
         this.tilemap = GetElement(tilemap, Image);
@@ -13,6 +24,15 @@ export class Simulator {
 
         this.onTilemapLoad = this.render.bind(this);
         this.tilemap.addEventListener("load", this.onTilemapLoad);
+    }
+
+    transform(entry = TEMP_ENTRY, x, y){
+        const {offsetX, offsetY, centerX, centerY} = entry;
+
+        return [
+            entry.matrixA * (x + offsetX - centerX) + entry.matrixB * (y + offsetY - centerY) + centerX,
+            entry.matrixC * (x + offsetX - centerX) + entry.matrixD * (y + offsetY - centerY) + centerY
+        ];
     }
 
     render(){
