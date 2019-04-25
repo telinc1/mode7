@@ -1,0 +1,17 @@
+.pixelated {
+    image-rendering: pixelated;
+}
+
+.tilemap-choices {
+    padding: 0;
+    list-style: none;
+}
+
+.tilemap-choices li {
+    float: left;
+}
+
+.tilemap-choices img {
+    width: 128px;
+    margin-right: 1em;
+}
