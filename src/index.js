@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function(){
         reader.readAsDataURL(file);
     });
 
-    simulator.render();
+    simulator.refresh();
 
     tilemapImage.src = tilemap.src;
 });

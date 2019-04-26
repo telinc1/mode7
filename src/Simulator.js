@@ -16,15 +16,14 @@ export class Simulator {
         this.renderer = new CanvasRenderer(this, canvas);
         this.previousEntry = null;
         this.nextEntry = new Entry(224);
-        this.dirty = false;
 
         this.nextEntry.previousEntry = this;
 
-        this.onTilemapLoad = this.render.bind(this);
+        this.onTilemapLoad = this.refresh.bind(this);
         this.tilemap.addEventListener("load", this.onTilemapLoad);
     }
 
-    render(){
-        return this.renderer.render(this.nextEntry);
+    refresh(){
+        this.renderer.render(this.nextEntry);
     }
 }

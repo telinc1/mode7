@@ -146,7 +146,7 @@ export class EntryInterface {
                         }
 
                         parameter.values[index] = number;
-                        this.ui.simulator.dirty = true;
+                        this.ui.simulator.refresh();
                     });
 
                     input.addEventListener("blur", () => {
@@ -156,7 +156,7 @@ export class EntryInterface {
                     fields.appendChild(inputField);
                 });
 
-                this.ui.simulator.dirty = true;
+                this.ui.simulator.refresh();
             };
 
             const select = form.querySelector(".functions");
@@ -190,7 +190,7 @@ export class EntryInterface {
         this.dom.scanlines.value = value;
 
         this.entry.scanlines = value - 1;
-        this.ui.simulator.dirty = true;
+        this.ui.simulator.refresh();
     }
 
     onUpClick(event){
@@ -221,9 +221,9 @@ export class EntryInterface {
         if(index > 0){
             this.ui.entries[index] = this.ui.entries[index - 1];
             this.ui.entries[index - 1] = this;
-        }else{
-            throw new Error();
         }
+
+        this.ui.simulator.refresh();
     }
 
     onDownClick(event){
@@ -254,9 +254,9 @@ export class EntryInterface {
         if(index !== -1 && index + 1 < this.ui.entries.length){
             this.ui.entries[index] = this.ui.entries[index + 1];
             this.ui.entries[index + 1] = this;
-        }else{
-            throw new Error();
         }
+
+        this.ui.simulator.refresh();
     }
 
     onRemoveClick(event){
@@ -280,6 +280,8 @@ export class EntryInterface {
         if(index !== -1){
             this.ui.entries.splice(index, 1);
         }
+
+        this.ui.simulator.refresh();
     }
 
     swap(x, y){
@@ -309,8 +311,6 @@ export class EntryInterface {
         if(reference){
             entry.nextEntry = reference.nextEntry;
             reference.nextEntry = entry;
-        }else{
-            throw new Error();
         }
 
         entry.previousEntry = reference;

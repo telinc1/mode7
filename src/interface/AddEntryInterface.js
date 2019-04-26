@@ -37,6 +37,8 @@ export class AddEntryInterface {
 
         this.ui.entries.push(ui);
 
+        this.ui.simulator.refresh();
+
         event.preventDefault();
     }
 }
