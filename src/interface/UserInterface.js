@@ -6,8 +6,6 @@ export class UserInterface {
         this.simulator = simulator;
         this.entries = [];
         this.add = null;
-
-        window.ui = this;
     }
 
     addToDOM(){
@@ -24,5 +22,7 @@ export class UserInterface {
 
         this.add = new AddEntryInterface(this);
         this.add.addToDOM();
+
+        this.entries[0].onItemClick(null, true);
     }
 }

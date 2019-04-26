@@ -1,6 +1,10 @@
 import {Clamp} from "../Clamp";
 import {Entry} from "../Entry";
 import {ParseHTML} from "../ParseHTML";
+import {Constant} from "../functions/Constant";
+import {Linear} from "../functions/Linear";
+import {NumberToHex} from "../NumberToHex";
+import {HexToNumber} from "../HexToNumber";
 
 const LIST_ITEM = `<span class="list-group-item list-group-item-action pointer">
     <input type="number" min="1" max="224" class="scanlines form-control d-inline w-25"> scanlines
@@ -8,6 +12,37 @@ const LIST_ITEM = `<span class="list-group-item list-group-item-action pointer">
     <span class="float-right ml-3 pointer down"><i class="fas fa-arrow-down"></i></span>
     <span class="float-right ml-3 pointer up"><i class="fas fa-arrow-up"></i></span>
 </span>`;
+
+const PARAMETER = `<div class="form-group row">
+    <label class="col-md-2 col-form-label name"></label>
+    <div class="col-md-10 form-row fields">
+        <div class="col static">
+            <select class="custom-select functions"></select>
+        </div>
+    </div>
+</div>`;
+
+const INPUT_FIELD = `<div class="col">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">$</span>
+        </div>
+        <input type="text">
+    </div>
+</div>`;
+
+const PARAMETERS = {
+    matrixA: {name: "Matrix A", decimal: 256},
+    matrixB: {name: "Matrix B", decimal: 256},
+    matrixC: {name: "Matrix C", decimal: 256},
+    matrixD: {name: "Matrix D", decimal: 256},
+    offsetX: {name: "Offset X"},
+    offsetY: {name: "Offset Y"},
+    centerX: {name: "Center X"},
+    centerY: {name: "Center Y"}
+};
+
+const FUNCTIONS = [Constant, Linear];
 
 export class EntryInterface {
     constructor(ui, entry){
@@ -22,6 +57,7 @@ export class EntryInterface {
         }
 
         const item = ParseHTML(LIST_ITEM).firstElementChild;
+        item.addEventListener("click", this.onItemClick.bind(this));
 
         const scanlines = item.querySelector(".scanlines");
         scanlines.value = this.entry.scanlines + 1;
@@ -40,6 +76,113 @@ export class EntryInterface {
         entries.appendChild(item);
 
         this.dom = {entries, item, scanlines, up, down, remove};
+    }
+
+    // I bitterly regret not using Vue for this.
+    onItemClick(event, force = false){
+        const {entries, item} = this.dom;
+
+        if(force !== true && (event.target !== item || item.classList.contains("active"))){
+            return;
+        }
+
+        const active = entries.querySelector(".active");
+
+        if(active != null){
+            active.classList.remove("active");
+        }
+
+        const container = document.getElementById("parameters");
+
+        while(container.firstChild != null){
+            container.removeChild(container.firstChild);
+        }
+
+        const {entry} = this;
+
+        Object.keys(PARAMETERS).forEach((key) => {
+            const definition = PARAMETERS[key];
+
+            const form = ParseHTML(PARAMETER).firstElementChild;
+            form.querySelector(".name").innerText = definition.name;
+
+            const selectFunction = (func) => {
+                const parameter = entry.parameters[key];
+                const fields = form.querySelector(".fields");
+
+                while(fields.lastChild != null){
+                    if(fields.lastChild.className === "col static"){
+                        break;
+                    }
+
+                    fields.removeChild(fields.lastChild);
+                }
+
+                parameter.func = func;
+
+                func.metadata.values.forEach((value, index) => {
+                    if(parameter.values[index] == null){
+                        parameter.values[index] = 0;
+                    }
+
+                    const inputField = ParseHTML(INPUT_FIELD).firstElementChild;
+                    const decimal = (definition.decimal == null) ? null : document.createElement("span");
+
+                    const input = inputField.querySelector("input");
+                    input.className = "form-control";
+                    input.placeholder = value;
+                    input.value = NumberToHex(parameter.values[index]);
+
+                    if(decimal != null){
+                        decimal.innerText = `= ${parameter.values[index] / definition.decimal}`;
+                        inputField.appendChild(decimal);
+                    }
+
+                    input.addEventListener("input", () => {
+                        const number = Clamp(HexToNumber(input.value), parameter.min, parameter.max);
+
+                        if(decimal != null){
+                            decimal.innerText = `= ${number / definition.decimal}`;
+                        }
+
+                        parameter.values[index] = number;
+                        this.ui.simulator.dirty = true;
+                    });
+
+                    input.addEventListener("blur", () => {
+                        input.value = NumberToHex(parameter.values[index]);
+                    });
+
+                    fields.appendChild(inputField);
+                });
+
+                this.ui.simulator.dirty = true;
+            };
+
+            const select = form.querySelector(".functions");
+
+            FUNCTIONS.forEach((func) => {
+                const option = document.createElement("option");
+                option.innerText = func.metadata.name;
+                option.value = func.metadata.name;
+
+                select.appendChild(option);
+            });
+
+            select.addEventListener("change", () => {
+                const func = FUNCTIONS.find(func => func.metadata.name === select.value);
+
+                if(func == null){
+                    return;
+                }
+
+                selectFunction(func);
+            });
+
+            selectFunction(entry.parameters[key].func);
+
+            container.appendChild(form);
+        });
     }
 
     onScanlineInput(){
