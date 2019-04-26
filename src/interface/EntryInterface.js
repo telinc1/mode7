@@ -132,22 +132,23 @@ export class EntryInterface {
 
                     const inputField = ParseHTML(INPUT_FIELD).firstElementChild;
                     const decimal = (definition.decimal == null) ? null : document.createElement("span");
+                    const factor = (definition.decimal == null) ? 1 : definition.decimal;
 
                     const input = inputField.querySelector("input");
                     input.className = "form-control";
                     input.placeholder = value;
-                    input.value = NumberToHex(parameter.values[index]);
+                    input.value = NumberToHex(parameter.values[index] * factor);
 
                     if(decimal != null){
-                        decimal.innerText = `= ${parameter.values[index] / definition.decimal}`;
+                        decimal.innerText = `= ${parameter.values[index]}`;
                         inputField.appendChild(decimal);
                     }
 
                     input.addEventListener("input", () => {
-                        const number = Clamp(HexToNumber(input.value), parameter.min, parameter.max);
+                        const number = Clamp(HexToNumber(input.value) / factor, parameter.min, parameter.max);
 
                         if(decimal != null){
-                            decimal.innerText = `= ${number / definition.decimal}`;
+                            decimal.innerText = `= ${number}`;
                         }
 
                         parameter.values[index] = number;
@@ -155,7 +156,7 @@ export class EntryInterface {
                     });
 
                     input.addEventListener("blur", () => {
-                        input.value = NumberToHex(parameter.values[index]);
+                        input.value = NumberToHex(parameter.values[index] * factor);
                     });
 
                     fields.appendChild(inputField);

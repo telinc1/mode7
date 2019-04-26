@@ -9,10 +9,10 @@ export class Entry {
         this.previousEntry = null;
         this.nextEntry = null;
 
-        this.createParameter(parameters, "matrixA", -32768, 32767, 256);
-        this.createParameter(parameters, "matrixB", -32768, 32767);
-        this.createParameter(parameters, "matrixC", -32768, 32767);
-        this.createParameter(parameters, "matrixD", -32768, 32767, 256);
+        this.createParameter(parameters, "matrixA", -128, 128, 1);
+        this.createParameter(parameters, "matrixB", -128, 128);
+        this.createParameter(parameters, "matrixC", -128, 128);
+        this.createParameter(parameters, "matrixD", -128, 128, 1);
         this.createParameter(parameters, "offsetX", -4096, 4095);
         this.createParameter(parameters, "offsetY", -4096, 4095);
         this.createParameter(parameters, "centerX", -4096, 4095);
@@ -69,10 +69,10 @@ export class Entry {
         const {parameters, values} = this;
         const progress = this.scanline / this.scanlines;
 
-        values.matrixA = parameters.matrixA.getValue(progress) / 256;
-        values.matrixB = parameters.matrixB.getValue(progress) / 256;
-        values.matrixC = parameters.matrixC.getValue(progress) / 256;
-        values.matrixD = parameters.matrixD.getValue(progress) / 256;
+        values.matrixA = parameters.matrixA.getValue(progress);
+        values.matrixB = parameters.matrixB.getValue(progress);
+        values.matrixC = parameters.matrixC.getValue(progress);
+        values.matrixD = parameters.matrixD.getValue(progress);
         values.offsetX = parameters.offsetX.getValue(progress);
         values.offsetY = parameters.offsetY.getValue(progress);
         values.centerX = parameters.centerX.getValue(progress);

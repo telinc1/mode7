@@ -6,6 +6,8 @@ export class UserInterface {
         this.simulator = simulator;
         this.entries = [];
         this.add = null;
+
+        window.ui = this;
     }
 
     addToDOM(){
