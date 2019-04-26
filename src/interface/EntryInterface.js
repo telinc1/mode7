@@ -92,6 +92,8 @@ export class EntryInterface {
             active.classList.remove("active");
         }
 
+        item.classList.add("active");
+
         const container = document.getElementById("parameters");
 
         while(container.firstChild != null){
