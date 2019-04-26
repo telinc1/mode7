@@ -283,6 +283,10 @@ export class EntryInterface {
             this.ui.entries.splice(index, 1);
         }
 
+        if(this.dom.item.classList.contains("active")){
+            this.ui.entries[0].onItemClick(null, true);
+        }
+
         this.ui.simulator.refresh();
     }
 
