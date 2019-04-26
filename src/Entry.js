@@ -1,4 +1,3 @@
-import {Clamp} from "./Clamp";
 import {Parameter} from "./Parameter";
 
 export class Entry {
@@ -60,21 +59,15 @@ export class Entry {
         const parameter = parameters[name];
 
         if(parameter instanceof Parameter){
-            const {values} = parameter;
-
-            for(let index = 0; index < values.length; index++){
-                values[index] = Clamp(values[index], min, max);
-            }
-
-            this.parameters[name] = parameter;
+            this.parameters[name] = parameter.setRange(min, max);
             return;
         }
 
         if(typeof parameter === "number"){
-            this.parameters[name] = new Parameter(Clamp(parameter, min, max));
+            this.parameters[name] = new Parameter(parameter).setRange(min, max);
             return;
         }
 
-        this.parameters[name] = new Parameter(fallback);
+        this.parameters[name] = new Parameter(fallback).setRange(min, max);
     }
 }
