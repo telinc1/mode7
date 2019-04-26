@@ -14,14 +14,17 @@ export class Simulator {
         }
 
         this.renderer = new CanvasRenderer(this, canvas);
+        this.previousEntry = null;
+        this.nextEntry = new Entry(224);
+        this.dirty = false;
 
-        this.firstEntry = new Entry(224);
+        this.nextEntry.previousEntry = this;
 
         this.onTilemapLoad = this.render.bind(this);
         this.tilemap.addEventListener("load", this.onTilemapLoad);
     }
 
     render(){
-        return this.renderer.render(this.firstEntry);
+        return this.renderer.render(this.nextEntry);
     }
 }

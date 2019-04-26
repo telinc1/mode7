@@ -6,6 +6,7 @@ export class Entry {
         this.scanline = 0;
         this.parameters = {};
         this.values = {};
+        this.previousEntry = null;
         this.nextEntry = null;
 
         this.createParameter(parameters, "matrixA", -32768, 32767, 256);

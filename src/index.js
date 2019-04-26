@@ -1,8 +1,12 @@
 import {Simulator} from "./Simulator";
+import {UserInterface} from "./interface/UserInterface";
 
 document.addEventListener("DOMContentLoaded", function(){
     const simulator = new Simulator("tilemap", "screen");
     const tilemap = simulator.tilemap;
+
+    const ui = new UserInterface(simulator);
+    ui.addToDOM();
 
     const tilemapImage = document.querySelector("#tilemap-image > img");
     const tilemapFile = document.getElementById("tilemap-file");

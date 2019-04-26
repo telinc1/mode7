@@ -1,3 +1,7 @@
+.pointer {
+    cursor: pointer;
+}
+
 .pixelated {
     image-rendering: pixelated;
 }
