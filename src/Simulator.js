@@ -28,11 +28,10 @@ export class Simulator {
 
     transform(entry = TEMP_ENTRY, x, y){
         const {offsetX, offsetY, centerX, centerY} = entry;
+        const resultX = entry.matrixA * (x + offsetX - centerX) + entry.matrixB * (y + offsetY - centerY) + centerX;
+        const resultY = entry.matrixC * (x + offsetX - centerX) + entry.matrixD * (y + offsetY - centerY) + centerY;
 
-        return [
-            entry.matrixA * (x + offsetX - centerX) + entry.matrixB * (y + offsetY - centerY) + centerX,
-            entry.matrixC * (x + offsetX - centerX) + entry.matrixD * (y + offsetY - centerY) + centerY
-        ];
+        return Math.floor(resultX) + Math.floor(resultY) * 1024;
     }
 
     render(){
