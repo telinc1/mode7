@@ -38,5 +38,7 @@ export class Parameter {
         for(let index = 0; index < values.length; index++){
             values[index] = Clamp(values[index], min, max);
         }
+
+        return this;
     }
 }

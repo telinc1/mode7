@@ -5,6 +5,7 @@ export class Entry {
         this.scanlines = scanlines - 1;
         this.scanline = 0;
         this.parameters = {};
+        this.values = {};
         this.nextEntry = null;
 
         this.createParameter(parameters, "matrixA", -32768, 32767, 256);
@@ -19,6 +20,8 @@ export class Entry {
 
     begin(){
         this.scanline = 0;
+        this.updateValues();
+
         return this;
     }
 
@@ -33,22 +36,12 @@ export class Entry {
             }
         }
 
+        this.updateValues();
         return this;
     }
 
     transform(x, y){
-        const {parameters} = this;
-        const progress = this.scanline / this.scanlines;
-
-        const matrixA = parameters.matrixA.getValue(progress) / 256;
-        const matrixB = parameters.matrixB.getValue(progress) / 256;
-        const matrixC = parameters.matrixC.getValue(progress) / 256;
-        const matrixD = parameters.matrixD.getValue(progress) / 256;
-        const offsetX = parameters.offsetX.getValue(progress);
-        const offsetY = parameters.offsetY.getValue(progress);
-        const centerX = parameters.centerX.getValue(progress);
-        const centerY = parameters.centerY.getValue(progress);
-
+        const {matrixA, matrixB, matrixC, matrixD, offsetX, offsetY, centerX, centerY} = this.values;
         const resultX = matrixA * (x + offsetX - centerX) + matrixB * (y + offsetY - centerY) + centerX;
         const resultY = matrixC * (x + offsetX - centerX) + matrixD * (y + offsetY - centerY) + centerY;
 
@@ -69,5 +62,19 @@ export class Entry {
         }
 
         this.parameters[name] = new Parameter(fallback).setRange(min, max);
+    }
+
+    updateValues(){
+        const {parameters, values} = this;
+        const progress = this.scanline / this.scanlines;
+
+        values.matrixA = parameters.matrixA.getValue(progress) / 256;
+        values.matrixB = parameters.matrixB.getValue(progress) / 256;
+        values.matrixC = parameters.matrixC.getValue(progress) / 256;
+        values.matrixD = parameters.matrixD.getValue(progress) / 256;
+        values.offsetX = parameters.offsetX.getValue(progress);
+        values.offsetY = parameters.offsetY.getValue(progress);
+        values.centerX = parameters.centerX.getValue(progress);
+        values.centerY = parameters.centerY.getValue(progress);
     }
 }
