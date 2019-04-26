@@ -7,7 +7,7 @@ import {NumberToHex} from "../NumberToHex";
 import {HexToNumber} from "../HexToNumber";
 
 const LIST_ITEM = `<span class="list-group-item list-group-item-action pointer">
-    <input type="number" min="1" max="224" class="scanlines form-control d-inline w-25"> scanlines
+    For <input type="number" min="1" max="224" class="scanlines form-control d-inline w-25"> <span class="scanline-label">scanlines</span>
     <span class="float-right ml-3 pointer remove"><i class="fas fa-times"></i></span>
     <span class="float-right ml-3 pointer down"><i class="fas fa-arrow-down"></i></span>
     <span class="float-right ml-3 pointer up"><i class="fas fa-arrow-up"></i></span>
@@ -63,6 +63,9 @@ export class EntryInterface {
         scanlines.value = this.entry.scanlines + 1;
         scanlines.addEventListener("input", this.onScanlineInput.bind(this));
 
+        const scanlineLabel = item.querySelector(".scanline-label");
+        scanlineLabel.innerText = (this.entry.scanlines === 0) ? "scanline" : "scanlines";
+
         const up = item.querySelector(".up");
         up.addEventListener("click", this.onUpClick.bind(this));
 
@@ -75,7 +78,7 @@ export class EntryInterface {
         const entries = document.getElementById("entries");
         entries.appendChild(item);
 
-        this.dom = {entries, item, scanlines, up, down, remove};
+        this.dom = {entries, item, scanlines, scanlineLabel, up, down, remove};
     }
 
     // I bitterly regret not using Vue for this.
@@ -190,6 +193,8 @@ export class EntryInterface {
     onScanlineInput(){
         const value = Clamp(this.dom.scanlines.value, 1, 224) || 1;
         this.dom.scanlines.value = value;
+
+        this.dom.scanlineLabel.innerText = (value === 1) ? "scanline" : "scanlines";
 
         this.entry.scanlines = value - 1;
         this.ui.simulator.refresh();
