@@ -1,9 +1,12 @@
+import {GetTop} from "./GetTop";
 import {Simulator} from "./Simulator";
 import {UserInterface} from "./interface/UserInterface";
 
 document.addEventListener("DOMContentLoaded", function(){
-    const simulator = new Simulator("tilemap", "screen");
-    const tilemap = simulator.tilemap;
+    const tilemap = document.getElementById("tilemap");
+    const screen = document.getElementById("screen");
+
+    const simulator = new Simulator(tilemap, screen);
 
     const ui = new UserInterface(simulator);
     ui.addToDOM();
@@ -11,6 +14,16 @@ document.addEventListener("DOMContentLoaded", function(){
     const tilemapImage = document.querySelector("#tilemap-image > img");
     const tilemapFile = document.getElementById("tilemap-file");
     const tilemapFileAlert = document.getElementById("tilemap-file-alert");
+
+    const threshold = GetTop(screen) + 0.625 * screen.height;
+
+    document.addEventListener("scroll", () => {
+        if(window.pageYOffset > threshold){
+            screen.classList.add("fixed");
+        }else{
+            screen.classList.remove("fixed");
+        }
+    });
 
     $("#tilemap-image-tab").on("show.bs.tab", (event) => {
         tilemapImage.src = tilemap.src;
