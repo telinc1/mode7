@@ -2,8 +2,33 @@
     cursor: pointer;
 }
 
-.pixelated {
+canvas {
     image-rendering: pixelated;
+}
+
+[id="tilemap"] {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+[id="tilemap-container"] {
+    position: relative;
+    width: 256px;
+    height: 256px;
+    margin-bottom: 1rem;
+}
+
+[id="tilemap-container"]:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: url('grid.gif');
 }
 
 [id="screen"].fixed {

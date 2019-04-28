@@ -3,15 +3,17 @@ import {Simulator} from "./simulator/Simulator";
 import {UserInterface} from "./simulator/interface/UserInterface";
 
 document.addEventListener("DOMContentLoaded", function(){
+    const source = document.createElement("img");
     const tilemap = document.getElementById("tilemap");
     const screen = document.getElementById("screen");
 
-    const simulator = new Simulator(tilemap, screen);
+    const simulator = new Simulator(source, tilemap, screen);
 
     const ui = new UserInterface(simulator);
     ui.addToDOM();
 
-    const tilemapImage = document.querySelector("#tilemap-image > img");
+    source.src = "assets/tilemap/grid.png";
+
     const tilemapFile = document.getElementById("tilemap-file");
     const tilemapFileAlert = document.getElementById("tilemap-file-alert");
 
@@ -25,11 +27,15 @@ document.addEventListener("DOMContentLoaded", function(){
         }
     });
 
-    $("#tilemap-image-tab").on("show.bs.tab", (event) => {
-        tilemapImage.src = tilemap.src;
+    const tilemapContainer = document.getElementById("tilemap-container");
+
+    $("#view-modal").on("show.bs.modal", function(event){
+        this.querySelector(".modal-body").appendChild(tilemap);
+    }).on("hidden.bs.modal", function(event){
+        tilemapContainer.appendChild(tilemap);
     });
 
-    $("#tilemap-upload-tab").on("show.bs.tab", (event) => {
+    $("#change-upload-tab").on("show.bs.tab", (event) => {
         tilemapFileAlert.classList.add("d-none");
     });
 
@@ -41,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function(){
         }
 
         image.addEventListener("click", (event) => {
-            tilemap.src = image.src;
+            source.src = image.src;
         });
     });
 
@@ -69,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
         const reader = new FileReader();
         reader.onload = (event) => {
-            tilemap.src = event.target.result;
+            source.src = event.target.result;
 
             tilemapFileAlert.innerText = "Image selected.";
 
@@ -83,6 +89,4 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     simulator.refresh();
-
-    tilemapImage.src = tilemap.src;
 });
