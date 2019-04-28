@@ -41,12 +41,25 @@ export class Entry {
         return this;
     }
 
-    transform(x, y){
+    transform(screenX, screenY){
         const {matrixA, matrixB, matrixC, matrixD, offsetX, offsetY, centerX, centerY} = this.values;
-        const resultX = matrixA * (x + offsetX - centerX) + matrixB * (y + offsetY - centerY) + centerX;
-        const resultY = matrixC * (x + offsetX - centerX) + matrixD * (y + offsetY - centerY) + centerY;
+        const x = matrixA * (screenX + offsetX - centerX) + matrixB * (screenY + offsetY - centerY) + centerX;
+        const y = matrixC * (screenX + offsetX - centerX) + matrixD * (screenY + offsetY - centerY) + centerY;
 
-        return Math.floor(resultX) + Math.floor(resultY) * 1024;
+        return {
+            x: Math.round(x),
+            y: Math.round(y)
+        };
+    }
+
+    transformToIndex(screenX, screenY){
+        let {x, y} = this.transform(screenX, screenY);
+
+        while(y < 0){
+            y += 1024;
+        }
+
+        return x + (y % 1024) * 1024;
     }
 
     createParameter(parameters, name, min, max, fallback = 0){
