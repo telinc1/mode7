@@ -1,10 +1,10 @@
-import {Clamp} from "../Clamp";
-import {Constant} from "../functions/Constant";
+import {Clamp} from "../../math/Clamp";
+import {Constant} from "../../math/functions/Constant";
 import {Entry} from "../Entry";
-import {HexToNumber} from "../HexToNumber";
-import {Linear} from "../functions/Linear";
-import {NumberToHex} from "../NumberToHex";
-import {ParseHTML} from "../ParseHTML";
+import {HexToNumber} from "../../math/HexToNumber";
+import {Linear} from "../../math/functions/Linear";
+import {NumberToHex} from "../../math/NumberToHex";
+import {ParseHTML} from "../../dom/ParseHTML";
 
 const LIST_ITEM = `<span class="list-group-item list-group-item-action pointer">
     For <input type="number" min="1" max="224" class="scanlines form-control d-inline w-25"> <span class="scanline-label">scanlines</span>

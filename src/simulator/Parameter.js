@@ -1,5 +1,5 @@
-import {Clamp} from "./Clamp";
-import {Constant} from "./functions/Constant";
+import {Clamp} from "../math/Clamp";
+import {Constant} from "../math/functions/Constant";
 
 const {hasOwnProperty} = Object.prototype;
 

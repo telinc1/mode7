@@ -1,6 +1,6 @@
-import {GetTop} from "./GetTop";
-import {Simulator} from "./Simulator";
-import {UserInterface} from "./interface/UserInterface";
+import {GetTop} from "./dom/GetTop";
+import {Simulator} from "./simulator/Simulator";
+import {UserInterface} from "./simulator/interface/UserInterface";
 
 document.addEventListener("DOMContentLoaded", function(){
     const tilemap = document.getElementById("tilemap");

@@ -1,9 +1,9 @@
-import {CanvasRenderer} from "./CanvasRenderer";
+import {CanvasRenderer} from "./renderer/CanvasRenderer";
 import {Entry} from "./Entry";
-import {GetElement} from "./GetElement";
+import {GetElement} from "../dom/GetElement";
 
 import {Parameter} from "./Parameter";
-import {Linear} from "./functions/Linear";
+import {Linear} from "../math/functions/Linear";
 
 export class Simulator {
     constructor(tilemap, canvas){

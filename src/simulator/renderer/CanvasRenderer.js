@@ -1,4 +1,4 @@
-import {GetElement} from "./GetElement";
+import {GetElement} from "../../dom/GetElement";
 
 export class CanvasRenderer {
     constructor(simulator, canvas){
