@@ -58,3 +58,7 @@ canvas {
     height: 224px;
     margin: 1em 0;
 }
+
+.scanline-label {
+    pointer-events: none;
+}
