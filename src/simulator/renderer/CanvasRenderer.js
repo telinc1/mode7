@@ -26,17 +26,26 @@ export class CanvasRenderer {
 
         let entry = firstEntry.begin();
 
+        const {isNaN} = Number;
+
         for(let y = 0; y < 224; y++){
             edges.push(entry.transform(0, y), entry.transform(255, y));
 
             for(let x = 0; x < 256; x++){
                 const screenIndex = (y * 256 + x) * 4;
-                const tilemapIndex = entry.transformToIndex(x, y) * 4;
+                const tilemapIndex = entry.transformToPixelIndex(x, y) * 4;
 
-                screenPixels[screenIndex] = tilemapPixels[tilemapIndex];
-                screenPixels[screenIndex + 1] = tilemapPixels[tilemapIndex + 1];
-                screenPixels[screenIndex + 2] = tilemapPixels[tilemapIndex + 2];
-                screenPixels[screenIndex + 3] = tilemapPixels[tilemapIndex + 3];
+                if(isNaN(tilemapIndex)){
+                    screenPixels[screenIndex] = 0;
+                    screenPixels[screenIndex + 1] = 0;
+                    screenPixels[screenIndex + 2] = 0;
+                    screenPixels[screenIndex + 3] = 255;
+                }else{
+                    screenPixels[screenIndex] = tilemapPixels[tilemapIndex];
+                    screenPixels[screenIndex + 1] = tilemapPixels[tilemapIndex + 1];
+                    screenPixels[screenIndex + 2] = tilemapPixels[tilemapIndex + 2];
+                    screenPixels[screenIndex + 3] = tilemapPixels[tilemapIndex + 3];
+                }
             }
 
             entry = entry.nextScanline();

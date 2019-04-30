@@ -6,6 +6,10 @@ export class Entry {
         this.scanline = 0;
         this.parameters = {};
         this.values = {};
+        this.settings = 0;
+
+        this.wrapPoint = wrapToTilemap;
+
         this.previousEntry = null;
         this.nextEntry = null;
 
@@ -22,6 +26,16 @@ export class Entry {
     begin(){
         this.scanline = 0;
         this.updateValues();
+
+        const {values, settings} = this;
+        values.flipX = (settings & 0x1) !== 0;
+        values.flipY = (settings & 0x2) !== 0;
+
+        if((settings & 0x80) === 0){
+            this.warpPoint = wrapToTilemap;
+        }else{
+            this.wrapPoint = ((settings & 0x40) === 0) ? wrapToFixed : wrapToFirstTile;
+        }
 
         return this;
     }
@@ -42,7 +56,17 @@ export class Entry {
     }
 
     transform(screenX, screenY){
-        const {matrixA, matrixB, matrixC, matrixD, offsetX, offsetY, centerX, centerY} = this.values;
+        const {values} = this;
+        const {matrixA, matrixB, matrixC, matrixD, offsetX, offsetY, centerX, centerY} = values;
+
+        if(values.flipX){
+            screenX = 256 - screenX;
+        }
+
+        if(values.flipY){
+            screenY = 256 - screenY;
+        }
+
         const x = matrixA * (screenX + offsetX - centerX) + matrixB * (screenY + offsetY - centerY) + centerX;
         const y = matrixC * (screenX + offsetX - centerX) + matrixD * (screenY + offsetY - centerY) + centerY;
 
@@ -52,14 +76,9 @@ export class Entry {
         };
     }
 
-    transformToIndex(screenX, screenY){
-        let {x, y} = this.transform(screenX, screenY);
-
-        while(y < 0){
-            y += 1024;
-        }
-
-        return x + (y % 1024) * 1024;
+    transformToPixelIndex(screenX, screenY){
+        const {x, y} = this.wrapPoint(this.transform(screenX, screenY));
+        return x + y * 1024;
     }
 
     createParameter(parameters, name, min, max, fallback = 0){
@@ -91,4 +110,34 @@ export class Entry {
         values.centerX = parameters.centerX.getValue(progress);
         values.centerY = parameters.centerY.getValue(progress);
     }
+}
+
+function wrapToTilemap(point){
+    const {x, y} = point;
+    point.x = (x >= 0) ? x % 1024 : (x % 1024 + 1024) % 1024;
+    point.y = (y >= 0) ? y % 1024 : (y % 1024 + 1024) % 1024;
+
+    return point;
+}
+
+function wrapToFirstTile(point){
+    const {x, y} = point;
+
+    if(x < 0 || x >= 1024 || y < 0 || y >= 1024){
+        point.x = (x >= 0) ? x % 8 : (x % 8 + 8) % 8;
+        point.y = (y >= 0) ? y % 8 : (y % 8 + 8) % 8;
+    }
+
+    return point;
+}
+
+function wrapToFixed(point){
+    const {x, y} = point;
+
+    if(x < 0 || x >= 1024 || y < 0 || y >= 1024){
+        point.x = Number.NaN;
+        point.y = Number.NaN;
+    }
+
+    return point;
 }
