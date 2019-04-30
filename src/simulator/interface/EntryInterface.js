@@ -22,7 +22,8 @@ const PARAMETER = `<div class="form-group row">
     </div>
 </div>`;
 
-const INPUT_FIELD = `<div class="col">
+const INPUT_FIELD = `<div class="col input-float">
+    <label></label>
     <div class="input-group">
         <div class="input-group-prepend">
             <span class="input-group-text">$</span>
@@ -133,6 +134,9 @@ export class EntryInterface {
                     const inputField = ParseHTML(INPUT_FIELD).firstElementChild;
                     const decimal = (definition.decimal == null) ? null : document.createElement("span");
                     const factor = (definition.decimal == null) ? 1 : definition.decimal;
+
+                    const label = inputField.querySelector("label");
+                    label.innerText = value;
 
                     const input = inputField.querySelector("input");
                     input.className = "form-control";

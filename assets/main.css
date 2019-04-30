@@ -71,3 +71,18 @@ canvas {
 .scanline-label {
     pointer-events: none;
 }
+
+.input-float {
+    position: relative;
+}
+
+.input-float label {
+    position: absolute;
+    top: -0.55rem;
+    left: 2.6rem;
+    z-index: 10;
+    padding: 0 6px;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 12px;
+}
