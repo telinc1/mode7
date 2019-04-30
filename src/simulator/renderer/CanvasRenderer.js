@@ -64,9 +64,17 @@ export class CanvasRenderer {
             entry = entry.nextScanline();
         }
 
+        for(let y = 224; y < 255; y++){
+            LEFT[y] = LEFT[y] || {};
+            RIGHT[y] = RIGHT[y] || {};
+
+            entry.transform(0, y, LEFT[y]).entry = entry;
+            entry.transform(255, y, RIGHT[y]).entry = entry;
+        }
+
         for(let x = 0; x < 256; x++){
             BOTTOM[x] = BOTTOM[x] || {};
-            entry.transform(x, 223, BOTTOM[x]).entry = entry;
+            entry.transform(x, 255, BOTTOM[x]).entry = entry;
         }
 
         screen.putImageData(screenData, 0, 0);
