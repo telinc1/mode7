@@ -22,14 +22,32 @@ export class CanvasRenderer {
         const tilemapPixels = tilemap.getImageData(0, 0, 1024, 1024).data;
         const screenData = screen.createImageData(256, 224);
         const screenPixels = screenData.data;
-        const edges = [];
+
+        const top = [];
+        const right = [];
+        const bottom = [];
+        const left = [];
 
         let entry = firstEntry.begin();
+
+        for(let x = 0; x < 256; x++){
+            const point = entry.transform(x, 0);
+            point.entry = entry;
+
+            top.push(point);
+        }
 
         const {isNaN} = Number;
 
         for(let y = 0; y < 224; y++){
-            edges.push(entry.transform(0, y), entry.transform(255, y));
+            const leftPoint = entry.transform(0, y);
+            leftPoint.entry = entry;
+
+            const rightPoint = entry.transform(255, y);
+            rightPoint.entry = entry;
+
+            left.push(leftPoint);
+            right.push(rightPoint);
 
             for(let x = 0; x < 256; x++){
                 const screenIndex = (y * 256 + x) * 4;
@@ -51,30 +69,62 @@ export class CanvasRenderer {
             entry = entry.nextScanline();
         }
 
+        for(let x = 0; x < 256; x++){
+            const point = entry.transform(x, 223);
+            point.entry = entry;
+
+            bottom.push(point);
+        }
+
         screen.putImageData(screenData, 0, 0);
 
-        tilemap.lineWidth = 5;
-        tilemap.strokeStyle = "blue";
+        this.drawScreenBorder(tilemap, top);
+        this.drawScreenBorder(tilemap, right);
+        this.drawScreenBorder(tilemap, bottom);
+        this.drawScreenBorder(tilemap, left);
+    }
 
-        tilemap.beginPath();
-        tilemap.moveTo(edges[0].x, edges[0].y);
+    drawScreenBorder(context, points){
+        let currentColor = null;
+        let currentRegionX = Number.NaN;
+        let currentRegionY = Number.NaN;
+        let currentEntry = null;
 
-        for(let index = 2; index < edges.length; index += 2){
-            tilemap.lineTo(edges[index].x, edges[index].y);
-        }
+        context.beginPath();
+        context.lineWidth = 5;
 
-        tilemap.moveTo(edges[1].x, edges[1].y);
+        points.forEach((point) => {
+            const {x, y, entry} = point;
+            const regionX = Math.floor(point.x / 1024);
+            const regionY = Math.floor(point.y / 1024);
 
-        for(let index = 3; index < edges.length; index += 2){
-            tilemap.lineTo(edges[index].x, edges[index].y);
-        }
+            let color = ((entry.settings & 0x80) !== 0 && (regionX !== 0 || regionY !== 0))
+                ? "rgba(255, 0, 0, 0.4)"
+                : "#00f";
 
-        tilemap.moveTo(edges[0].x, edges[0].y);
-        tilemap.lineTo(edges[1].x, edges[1].y);
+            entry.wrapToTilemap(point);
 
-        tilemap.moveTo(edges[446].x, edges[446].y);
-        tilemap.lineTo(edges[447].x, edges[447].y);
+            if(
+                currentColor !== color
+                || currentRegionX !== regionX
+                || currentRegionY !== regionY
+                || currentEntry !== entry
+            ){
+                context.stroke();
 
-        tilemap.stroke();
+                context.beginPath();
+                context.strokeStyle = color;
+                context.moveTo(point.x, point.y);
+
+                currentColor = color;
+                currentRegionX = regionX;
+                currentRegionY = regionY;
+                currentEntry = entry;
+            }else{
+                context.lineTo(point.x, point.y);
+            }
+        });
+
+        context.stroke();
     }
 }

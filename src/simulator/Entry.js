@@ -8,7 +8,7 @@ export class Entry {
         this.values = {};
         this.settings = 0;
 
-        this.wrapPoint = wrapToTilemap;
+        this.wrapPoint = this.wrapToTilemap;
 
         this.previousEntry = null;
         this.nextEntry = null;
@@ -32,9 +32,9 @@ export class Entry {
         values.flipY = (settings & 0x2) !== 0;
 
         if((settings & 0x80) === 0){
-            this.warpPoint = wrapToTilemap;
+            this.warpPoint = this.wrapToTilemap;
         }else{
-            this.wrapPoint = ((settings & 0x40) === 0) ? wrapToFixed : wrapToFirstTile;
+            this.wrapPoint = ((settings & 0x40) === 0) ? this.wrapToFixed : this.wrapToFirstTile;
         }
 
         return this;
@@ -81,6 +81,36 @@ export class Entry {
         return x + y * 1024;
     }
 
+    wrapToTilemap(point){
+        const {x, y} = point;
+        point.x = (x >= 0) ? x % 1024 : (x % 1024 + 1024) % 1024;
+        point.y = (y >= 0) ? y % 1024 : (y % 1024 + 1024) % 1024;
+
+        return point;
+    }
+
+    wrapToFirstTile(point){
+        const {x, y} = point;
+
+        if(x < 0 || x >= 1024 || y < 0 || y >= 1024){
+            point.x = (x >= 0) ? x % 8 : (x % 8 + 8) % 8;
+            point.y = (y >= 0) ? y % 8 : (y % 8 + 8) % 8;
+        }
+
+        return point;
+    }
+
+    wrapToFixed(point){
+        const {x, y} = point;
+
+        if(x < 0 || x >= 1024 || y < 0 || y >= 1024){
+            point.x = Number.NaN;
+            point.y = Number.NaN;
+        }
+
+        return point;
+    }
+
     createParameter(parameters, name, min, max, fallback = 0){
         const parameter = parameters[name];
 
@@ -110,34 +140,4 @@ export class Entry {
         values.centerX = parameters.centerX.getValue(progress);
         values.centerY = parameters.centerY.getValue(progress);
     }
-}
-
-function wrapToTilemap(point){
-    const {x, y} = point;
-    point.x = (x >= 0) ? x % 1024 : (x % 1024 + 1024) % 1024;
-    point.y = (y >= 0) ? y % 1024 : (y % 1024 + 1024) % 1024;
-
-    return point;
-}
-
-function wrapToFirstTile(point){
-    const {x, y} = point;
-
-    if(x < 0 || x >= 1024 || y < 0 || y >= 1024){
-        point.x = (x >= 0) ? x % 8 : (x % 8 + 8) % 8;
-        point.y = (y >= 0) ? y % 8 : (y % 8 + 8) % 8;
-    }
-
-    return point;
-}
-
-function wrapToFixed(point){
-    const {x, y} = point;
-
-    if(x < 0 || x >= 1024 || y < 0 || y >= 1024){
-        point.x = Number.NaN;
-        point.y = Number.NaN;
-    }
-
-    return point;
 }
