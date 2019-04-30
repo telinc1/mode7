@@ -169,8 +169,6 @@ export class EntryInterface {
 
                     fields.appendChild(inputField);
                 });
-
-                this.ui.simulator.refresh();
             };
 
             const select = form.querySelector(".functions");
@@ -191,6 +189,7 @@ export class EntryInterface {
                 }
 
                 selectFunction(func);
+                this.ui.simulator.refresh();
             });
 
             selectFunction(entry.parameters[key].func);
