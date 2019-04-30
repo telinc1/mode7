@@ -1,5 +1,7 @@
 import {Parameter} from "./Parameter";
 
+const INDEX_POINT = {x: 0, y: 0};
+
 export class Entry {
     constructor(scanlines, parameters = {}){
         this.scanlines = scanlines - 1;
@@ -55,7 +57,7 @@ export class Entry {
         return this;
     }
 
-    transform(screenX, screenY){
+    transform(screenX, screenY, point = {}){
         const {values} = this;
         const {matrixA, matrixB, matrixC, matrixD, offsetX, offsetY, centerX, centerY} = values;
 
@@ -67,48 +69,50 @@ export class Entry {
             screenY = 256 - screenY;
         }
 
-        const x = matrixA * (screenX + offsetX - centerX) + matrixB * (screenY + offsetY - centerY) + centerX;
-        const y = matrixC * (screenX + offsetX - centerX) + matrixD * (screenY + offsetY - centerY) + centerY;
+        point.x = Math.round(
+            matrixA * (screenX + offsetX - centerX) + matrixB * (screenY + offsetY - centerY) + centerX
+        );
 
-        return {
-            x: Math.round(x),
-            y: Math.round(y)
-        };
+        point.y = Math.round(
+            matrixC * (screenX + offsetX - centerX) + matrixD * (screenY + offsetY - centerY) + centerY
+        );
+
+        return point;
     }
 
-    transformToPixelIndex(screenX, screenY){
-        const {x, y} = this.wrapPoint(this.transform(screenX, screenY));
+    transformToPixelIndex(screenX, screenY, point = INDEX_POINT){
+        const {x, y} = this.wrapPoint(this.transform(screenX, screenY, INDEX_POINT), INDEX_POINT);
         return x + y * 1024;
     }
 
-    wrapToTilemap(point){
-        const {x, y} = point;
-        point.x = (x >= 0) ? x % 1024 : (x % 1024 + 1024) % 1024;
-        point.y = (y >= 0) ? y % 1024 : (y % 1024 + 1024) % 1024;
-
-        return point;
+    wrapToTilemap({x, y}, out = {}){
+        out.x = (x >= 0) ? x % 1024 : (x % 1024 + 1024) % 1024;
+        out.y = (y >= 0) ? y % 1024 : (y % 1024 + 1024) % 1024;
+        return out;
     }
 
-    wrapToFirstTile(point){
-        const {x, y} = point;
-
+    wrapToFirstTile({x, y}, out = {}){
         if(x < 0 || x >= 1024 || y < 0 || y >= 1024){
-            point.x = (x >= 0) ? x % 8 : (x % 8 + 8) % 8;
-            point.y = (y >= 0) ? y % 8 : (y % 8 + 8) % 8;
+            out.x = (x >= 0) ? x % 8 : (x % 8 + 8) % 8;
+            out.y = (y >= 0) ? y % 8 : (y % 8 + 8) % 8;
+        }else{
+            out.x = x;
+            out.y = y;
         }
 
-        return point;
+        return out;
     }
 
-    wrapToFixed(point){
-        const {x, y} = point;
-
+    wrapToFixed({x, y}, out = {}){
         if(x < 0 || x >= 1024 || y < 0 || y >= 1024){
-            point.x = Number.NaN;
-            point.y = Number.NaN;
+            out.x = Number.NaN;
+            out.y = Number.NaN;
+        }else{
+            out.x = x;
+            out.y = y;
         }
 
-        return point;
+        return out;
     }
 
     createParameter(parameters, name, min, max, fallback = 0){

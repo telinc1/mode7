@@ -1,5 +1,10 @@
 import {GetElement} from "../../dom/GetElement";
 
+const TOP = [];
+const RIGHT = [];
+const BOTTOM = [];
+const LEFT = [];
+
 export class CanvasRenderer {
     constructor(simulator, canvas){
         this.simulator = simulator;
@@ -23,31 +28,21 @@ export class CanvasRenderer {
         const screenData = screen.createImageData(256, 224);
         const screenPixels = screenData.data;
 
-        const top = [];
-        const right = [];
-        const bottom = [];
-        const left = [];
-
         let entry = firstEntry.begin();
 
         for(let x = 0; x < 256; x++){
-            const point = entry.transform(x, 0);
-            point.entry = entry;
-
-            top.push(point);
+            TOP[x] = TOP[x] || {};
+            entry.transform(x, 0, TOP[x]).entry = entry;
         }
 
         const {isNaN} = Number;
 
         for(let y = 0; y < 224; y++){
-            const leftPoint = entry.transform(0, y);
-            leftPoint.entry = entry;
+            LEFT[y] = LEFT[y] || {};
+            RIGHT[y] = RIGHT[y] || {};
 
-            const rightPoint = entry.transform(255, y);
-            rightPoint.entry = entry;
-
-            left.push(leftPoint);
-            right.push(rightPoint);
+            entry.transform(0, y, LEFT[y]).entry = entry;
+            entry.transform(255, y, RIGHT[y]).entry = entry;
 
             for(let x = 0; x < 256; x++){
                 const screenIndex = (y * 256 + x) * 4;
@@ -70,18 +65,16 @@ export class CanvasRenderer {
         }
 
         for(let x = 0; x < 256; x++){
-            const point = entry.transform(x, 223);
-            point.entry = entry;
-
-            bottom.push(point);
+            BOTTOM[x] = BOTTOM[x] || {};
+            entry.transform(x, 223, BOTTOM[x]).entry = entry;
         }
 
         screen.putImageData(screenData, 0, 0);
 
-        this.drawScreenBorder(tilemap, top);
-        this.drawScreenBorder(tilemap, right);
-        this.drawScreenBorder(tilemap, bottom);
-        this.drawScreenBorder(tilemap, left);
+        this.drawScreenBorder(tilemap, TOP);
+        this.drawScreenBorder(tilemap, RIGHT);
+        this.drawScreenBorder(tilemap, BOTTOM);
+        this.drawScreenBorder(tilemap, LEFT);
     }
 
     drawScreenBorder(context, points){
@@ -102,7 +95,7 @@ export class CanvasRenderer {
                 ? "rgba(255, 0, 0, 0.4)"
                 : "#00f";
 
-            entry.wrapToTilemap(point);
+            entry.wrapToTilemap(point, point);
 
             if(
                 currentColor !== color
