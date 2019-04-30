@@ -1,9 +1,9 @@
 import {Clamp} from "../../math/Clamp";
 import {Constant} from "../../math/functions/Constant";
 import {Entry} from "../Entry";
-import {HexToNumber} from "../../math/HexToNumber";
 import {Linear} from "../../math/functions/Linear";
 import {NumberToHex} from "../../math/NumberToHex";
+import {ParseHexInput} from "../../math/ParseHexInput";
 import {ParseHTML} from "../../dom/ParseHTML";
 
 const LIST_ITEM = `<span class="list-group-item list-group-item-action pointer">
@@ -149,7 +149,7 @@ export class EntryInterface {
                     }
 
                     input.addEventListener("input", () => {
-                        const number = Clamp(HexToNumber(input.value) / factor, parameter.min, parameter.max);
+                        const number = Clamp(ParseHexInput(input.value, factor) / factor, parameter.min, parameter.max);
 
                         if(decimal != null){
                             decimal.innerText = `= ${number}`;
@@ -161,6 +161,10 @@ export class EntryInterface {
 
                     input.addEventListener("blur", () => {
                         input.value = NumberToHex(parameter.values[index] * factor);
+
+                        if(decimal != null){
+                            decimal.innerText = `= ${parameter.values[index]}`;
+                        }
                     });
 
                     fields.appendChild(inputField);
