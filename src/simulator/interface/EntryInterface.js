@@ -5,6 +5,7 @@ import {Linear} from "../../math/functions/Linear";
 import {NumberToHex} from "../../math/NumberToHex";
 import {ParseHexInput} from "../../math/ParseHexInput";
 import {ParseHTML} from "../../dom/ParseHTML";
+import {Sine} from "../../math/functions/Sine";
 
 const LIST_ITEM = `<span class="list-group-item list-group-item-action pointer">
     For <input type="number" min="1" max="224" class="scanlines form-control d-inline w-25"> <span class="scanline-label">scanlines</span>
@@ -43,7 +44,7 @@ const PARAMETERS = {
     centerY: {name: "Center Y"}
 };
 
-const FUNCTIONS = [Constant, Linear];
+const FUNCTIONS = [Constant, Linear, Sine];
 
 export class EntryInterface {
     constructor(ui, entry){
