@@ -20,7 +20,7 @@ export class Simulator {
 
         this.renderer = new CanvasRenderer(this, screen);
         this.previousEntry = null;
-        this.nextEntry = new Entry(224);
+        this.nextEntry = new Entry(256);
 
         this.nextEntry.previousEntry = this;
 

@@ -8,7 +8,7 @@ import {ParseHTML} from "../../dom/ParseHTML";
 import {Sine} from "../../math/functions/Sine";
 
 const LIST_ITEM = `<span class="list-group-item list-group-item-action pointer">
-    For <input type="number" min="1" max="224" class="scanlines form-control d-inline w-25"> <span class="scanline-label">scanlines</span>
+    For <input type="number" min="1" max="256" class="scanlines form-control d-inline w-25"> <span class="scanline-label">scanlines</span>
     <span class="float-right ml-3 pointer remove"><i class="fas fa-times"></i></span>
     <span class="float-right ml-3 pointer down"><i class="fas fa-arrow-down"></i></span>
     <span class="float-right ml-3 pointer up"><i class="fas fa-arrow-up"></i></span>
@@ -200,7 +200,7 @@ export class EntryInterface {
     }
 
     onScanlineInput(){
-        const value = Clamp(this.dom.scanlines.value, 1, 224) || 1;
+        const value = Clamp(this.dom.scanlines.value, 1, 256) || 1;
         this.dom.scanlines.value = value;
 
         this.dom.scanlineLabel.innerText = (value === 1) ? "scanline" : "scanlines";

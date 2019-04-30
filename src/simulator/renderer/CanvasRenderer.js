@@ -70,6 +70,8 @@ export class CanvasRenderer {
 
             entry.transform(0, y, LEFT[y]).entry = entry;
             entry.transform(255, y, RIGHT[y]).entry = entry;
+
+            entry = entry.nextScanline();
         }
 
         for(let x = 0; x < 256; x++){
