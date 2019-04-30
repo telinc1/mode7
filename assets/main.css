@@ -31,6 +31,15 @@ canvas {
     background: url('grid.gif');
 }
 
+[id="screen-container"] {
+    width: 256px;
+    height: 224px;
+}
+
+[id="screen"] {
+    position: absolute;
+}
+
 [id="screen"].fixed {
     position: fixed;
     z-index: 1000;
