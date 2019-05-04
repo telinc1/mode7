@@ -113,6 +113,15 @@ export class EntryInterface {
         this.dom = {entries, item, scanlines, scanlineLabel, up, down, remove};
     }
 
+    removeFromDOM(){
+        if(this.dom == null){
+            return;
+        }
+
+        this.dom.entries.removeChild(this.dom.item);
+        this.dom = null;
+    }
+
     // I bitterly regret not using Vue for this.
     onItemClick(event, force = false){
         const {entries, item} = this.dom;

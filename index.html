@@ -47,13 +47,18 @@
             </div>
             <h2 class="mt-3">Animation</h2>
             <div class="row">
+                <div class="card w-100 mb-3">
+                    <div class="card-body">
+                        <a href="#" id="add-keyframe" class="btn btn-primary">Add keyframe</a>
+                        <a href="#" id="remove-keyframe" class="btn btn-danger">Remove active</a>
+                        <a href="#" id="play-animation" class="btn btn-primary float-right">Play</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col">
                     <div class="timeline-outer">
-                        <div class="timeline">
-                            <span class="keyframe">
-                                <span class="badge badge-pill badge-dark">1 sec</span>
-                            </span>
-                        </div>
+                        <div id="timeline" class="timeline"></div>
                     </div>
                 </div>
             </div>

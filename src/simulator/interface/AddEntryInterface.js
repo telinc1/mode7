@@ -5,6 +5,8 @@ export class AddEntryInterface {
     constructor(ui){
         this.ui = ui;
         this.dom = null;
+
+        this.onButtonClick = this.addEntry.bind(this);
     }
 
     addToDOM(){
@@ -13,13 +15,24 @@ export class AddEntryInterface {
         }
 
         const button = document.getElementById("add-entry");
-        button.addEventListener("click", this.addEntry.bind(this));
+        button.addEventListener("click", this.onButtonClick);
+
+        this.dom = button;
+    }
+
+    removeFromDOM(){
+        if(this.dom == null){
+            return;
+        }
+
+        this.dom.removeEventListener("click", this.onButtonClick);
+        this.dom = null;
     }
 
     addEntry(event){
         const entry = new Entry(1);
 
-        let lastEntry = this.ui.simulator.nextEntry;
+        let lastEntry = this.ui.keyframe.nextEntry;
 
         while(true){
             if(lastEntry.nextEntry == null){
