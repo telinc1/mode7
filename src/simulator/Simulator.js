@@ -1,10 +1,7 @@
 import {CanvasRenderer} from "./renderer/CanvasRenderer";
 import {Color} from "./Color";
-import {Entry} from "./Entry";
 import {GetElement} from "../dom/GetElement";
-
-import {Parameter} from "./Parameter";
-import {Linear} from "../math/functions/Linear";
+import {Keyframe} from "./Keyframe";
 
 export class Simulator {
     constructor(source, tilemap, screen){
@@ -21,9 +18,8 @@ export class Simulator {
 
         this.renderer = new CanvasRenderer(this, screen);
 
-        this.previousEntry = null;
-        this.nextEntry = new Entry(256);
-        this.nextEntry.previousEntry = this;
+        this.keyframes = [new Keyframe(this)];
+        this.keyframe = 0;
 
         this.colors = {
             fixed: new Color(),
@@ -36,6 +32,12 @@ export class Simulator {
     }
 
     refresh(){
-        this.renderer.render(this.nextEntry);
+        const keyframe = this.keyframes[this.keyframe] || this.keyframes[0];
+
+        if(keyframe == null){
+            return;
+        }
+
+        this.renderer.render(keyframe.nextEntry);
     }
 }

@@ -13,7 +13,7 @@ export class UserInterface {
     }
 
     addToDOM(){
-        let entry = this.simulator.nextEntry;
+        let entry = this.simulator.keyframes[0].nextEntry;
 
         while(entry != null){
             const ui = new EntryInterface(this, entry);
