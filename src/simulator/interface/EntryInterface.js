@@ -3,6 +3,7 @@ import {Constant} from "../../math/functions/Constant";
 import {Entry} from "../Entry";
 import {Linear} from "../../math/functions/Linear";
 import {NumberToHex} from "../../math/NumberToHex";
+import {PadString} from "../../math/PadString";
 import {ParseHexInput} from "../../math/ParseHexInput";
 import {ParseHTML} from "../../dom/ParseHTML";
 import {Sine} from "../../math/functions/Sine";
@@ -30,6 +31,35 @@ const INPUT_FIELD = `<div class="col input-float">
             <span class="input-group-text">$</span>
         </div>
         <input type="text">
+    </div>
+</div>`;
+
+const SETTINGS_ROW = `<div class="form-group row">
+    <label class="col-md-2 col-form-label">Settings</label>
+    <div class="col-md-10 form-row align-items-center">
+        <div class="col input-float input-float-start">
+            <label>Playing field</label>
+            <div class="input-group">
+                <select class="custom-select playfield">
+                    <option value="128">Don't wrap</option>
+                    <option value="0">Wrap to tilemap</option>
+                    <option value="192">Wrap to first tile</option>
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" id="field-flip-x" class="custom-control-input" value="1">
+                <label for="field-flip-x" class="custom-control-label">Flip X</label>
+            </div>
+        </div>
+        <div class="col">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" id="field-flip-y" class="custom-control-input" value="2">
+                <label for="field-flip-y" class="custom-control-label">Flip Y</label>
+            </div>
+        </div>
+        <div class="col flex-basis-auto value"></div>
     </div>
 </div>`;
 
@@ -197,6 +227,51 @@ export class EntryInterface {
 
             container.appendChild(form);
         });
+
+        const settingsForm = ParseHTML(SETTINGS_ROW).firstElementChild;
+        const settings = settingsForm.querySelectorAll("select, input");
+        const settingsValue = settingsForm.querySelector(".value");
+
+        const updateSettings = () => {
+            entry.settings = Array.prototype.reduce.call(settings, (accumulator, input) => {
+                // input.checked is undefined on a <select> (not strictly
+                // false), so this statement will only catch checkboxes which
+                // are not checked.
+                if(input.checked === false){
+                    return accumulator;
+                }
+
+                const value = parseInt(input.value, 10);
+                return Number.isNaN(value) ? accumulator : (accumulator | value);
+            }, 0);
+
+            settingsValue.innerText = `= $${PadString(entry.settings.toString(16).toUpperCase(), 2, "0")} = %${PadString(entry.settings.toString(2), 8, "0")}`;
+
+            this.ui.simulator.refresh();
+        };
+
+        const playfield = settingsForm.querySelector(".playfield");
+        playfield.value = entry.settings & 0xC0;
+        playfield.addEventListener("change", updateSettings);
+
+        let id = `field-${Math.floor(Math.random() * 32768)}`;
+        const flipX = settingsForm.querySelector("#field-flip-x");
+        flipX.labels[0].setAttribute("for", id);
+        flipX.id = id;
+        flipX.checked = ((entry.settings & 0x1) !== 0);
+        flipX.addEventListener("change", updateSettings);
+
+        id = `field-${Math.floor(Math.random() * 32768)}`;
+
+        const flipY = settingsForm.querySelector("#field-flip-y");
+        flipY.labels[0].setAttribute("for", id);
+        flipY.id = id;
+        flipY.checked = ((entry.settings & 0x2) !== 0);
+        flipY.addEventListener("change", updateSettings);
+
+        settingsValue.innerText = `= $${PadString(entry.settings.toString(16).toUpperCase(), 2, "0")} = %${PadString(entry.settings.toString(2), 8, "0")}`;
+
+        container.appendChild(settingsForm);
     }
 
     onScanlineInput(){

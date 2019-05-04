@@ -34,7 +34,7 @@ export class Entry {
         values.flipY = (settings & 0x2) !== 0;
 
         if((settings & 0x80) === 0){
-            this.warpPoint = this.wrapToTilemap;
+            this.wrapPoint = this.wrapToTilemap;
         }else{
             this.wrapPoint = ((settings & 0x40) === 0) ? this.wrapToFixed : this.wrapToFirstTile;
         }

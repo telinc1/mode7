@@ -1,4 +1,5 @@
 import {Clamp} from "../math/Clamp";
+import {PadString} from "../math/PadString";
 
 const HEX_COLOR = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i;
 
@@ -31,9 +32,7 @@ export class Color {
 
     toHex(){
         const color = (this.red << 16) | (this.green << 8) | this.blue;
-        const hex = color.toString(16).toUpperCase();
-
-        return `#${(hex.length >= 6) ? hex : new Array(7 - hex.length).join("0") + hex}`;
+        return `#${PadString(color.toString(16).toUpperCase(), 6, "0")}`;
     }
 
     toRGBA(){
