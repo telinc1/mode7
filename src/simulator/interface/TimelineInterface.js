@@ -1,6 +1,7 @@
 import {AddKeyframeInterface} from "./AddKeyframeInterface";
 import {GetLeft} from "../../dom/GetLeft";
 import {KeyframeInterface} from "./KeyframeInterface";
+import {PlayInterface} from "./PlayInterface";
 import {RemoveKeyframeInterface} from "./RemoveKeyframeInterface";
 
 export class TimelineInterface {
@@ -10,6 +11,7 @@ export class TimelineInterface {
         this.keyframes = [];
         this.addKeyframe = new AddKeyframeInterface(this);
         this.removeKeyframe = new RemoveKeyframeInterface(this);
+        this.play = new PlayInterface(this);
 
         this.simulator.keyframes.forEach((keyframe) => {
             this.keyframes.push(new KeyframeInterface(this, keyframe));
@@ -30,6 +32,7 @@ export class TimelineInterface {
 
         this.addKeyframe.addToDOM();
         this.removeKeyframe.addToDOM();
+        this.play.addToDOM();
 
         this.keyframes.forEach((keyframe) => {
             keyframe.addToDOM();

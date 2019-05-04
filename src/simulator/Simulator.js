@@ -3,8 +3,13 @@ import {Color} from "./Color";
 import {GetElement} from "../dom/GetElement";
 import {Keyframe} from "./Keyframe";
 
+import {AnimationHandler} from "./animation/AnimationHandler";
+window.AnimationHandler = AnimationHandler;
+
 export class Simulator {
     constructor(source, tilemap, screen){
+        window.simulator = this;
+
         this.source = GetElement(source, Image);
         this.tilemap = GetElement(tilemap, HTMLCanvasElement);
 
