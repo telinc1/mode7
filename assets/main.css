@@ -6,6 +6,10 @@ canvas {
     image-rendering: pixelated;
 }
 
+[type="color"].form-control {
+    max-width: 4.5rem;
+}
+
 [id="tilemap"] {
     display: block;
     max-width: 100%;

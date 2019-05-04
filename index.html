@@ -81,6 +81,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="change-upload-tab" data-toggle="tab" href="#change-upload" role="tab" aria-controls="change-upload">Upload Image</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="change-color-tab" data-toggle="tab" href="#change-color" role="tab" aria-controls="change-color">Set Colors</a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="change-choose" role="tabpanel" aria-labelledby="change-choose-tab">
@@ -96,6 +99,26 @@
                                 <div class="custom-file">
                                     <input type="file" id="tilemap-file" class="custom-file-input">
                                     <label class="custom-file-label" for="tilemap-file">Choose file</label>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="change-color" role="tabpanel" aria-labelledby="change-color-tab">
+                                <div class="form-group row">
+                                    <label for="color-fixed" class="col-md-3 col-form-label">Fixed Color</label>
+                                    <div class="col-md-9">
+                                        <input type="color" id="color-fixed" class="form-control" value="#000000">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="color-real" class="col-md-3 col-form-label">Real Screen</label>
+                                    <div class="col-md-9">
+                                        <input type="color" id="color-real" class="form-control" value="#0000FF">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="color-virtual" class="col-md-3 col-form-label">Virtual Screen</label>
+                                    <div class="col-md-9">
+                                        <input type="color" id="color-virtual" class="form-control" value="#FF0000">
+                                    </div>
                                 </div>
                             </div>
                         </div>

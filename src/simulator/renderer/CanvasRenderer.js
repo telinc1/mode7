@@ -37,6 +37,12 @@ export class CanvasRenderer {
 
         const {isNaN} = Number;
 
+        const {fixed} = this.simulator.colors;
+        const fixedRed = fixed.red;
+        const fixedGreen = fixed.green;
+        const fixedBlue = fixed.blue;
+        const fixedAlpha = fixed.alpha;
+
         for(let y = 0; y < 224; y++){
             LEFT[y] = LEFT[y] || {};
             RIGHT[y] = RIGHT[y] || {};
@@ -49,10 +55,10 @@ export class CanvasRenderer {
                 const tilemapIndex = entry.transformToPixelIndex(x, y) * 4;
 
                 if(isNaN(tilemapIndex)){
-                    screenPixels[screenIndex] = 0;
-                    screenPixels[screenIndex + 1] = 0;
-                    screenPixels[screenIndex + 2] = 0;
-                    screenPixels[screenIndex + 3] = 255;
+                    screenPixels[screenIndex] = fixedRed;
+                    screenPixels[screenIndex + 1] = fixedGreen;
+                    screenPixels[screenIndex + 2] = fixedBlue;
+                    screenPixels[screenIndex + 3] = fixedAlpha;
                 }else{
                     screenPixels[screenIndex] = tilemapPixels[tilemapIndex];
                     screenPixels[screenIndex + 1] = tilemapPixels[tilemapIndex + 1];
@@ -88,6 +94,10 @@ export class CanvasRenderer {
     }
 
     drawScreenBorder(context, points){
+        const {colors} = this.simulator;
+        const real = colors.real.toRGBA();
+        const virtual = colors.virtual.toRGBA();
+
         let currentColor = null;
         let currentRegionX = Number.NaN;
         let currentRegionY = Number.NaN;
@@ -100,10 +110,7 @@ export class CanvasRenderer {
             const {x, y, entry} = point;
             const regionX = Math.floor(point.x / 1024);
             const regionY = Math.floor(point.y / 1024);
-
-            let color = ((entry.settings & 0x80) !== 0 && (regionX !== 0 || regionY !== 0))
-                ? "rgba(255, 0, 0, 0.4)"
-                : "#00f";
+            const color = ((entry.settings & 0x80) !== 0 && (regionX !== 0 || regionY !== 0)) ? virtual : real;
 
             entry.wrapToTilemap(point, point);
 

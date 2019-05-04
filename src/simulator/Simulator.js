@@ -1,4 +1,5 @@
 import {CanvasRenderer} from "./renderer/CanvasRenderer";
+import {Color} from "./Color";
 import {Entry} from "./Entry";
 import {GetElement} from "../dom/GetElement";
 
@@ -19,10 +20,16 @@ export class Simulator {
         }
 
         this.renderer = new CanvasRenderer(this, screen);
+
         this.previousEntry = null;
         this.nextEntry = new Entry(256);
-
         this.nextEntry.previousEntry = this;
+
+        this.colors = {
+            fixed: new Color(),
+            real: new Color(0, 0, 255),
+            virtual: new Color(255, 0, 0, 102)
+        };
 
         this.onSourceLoad = this.refresh.bind(this);
         this.source.addEventListener("load", this.onSourceLoad);

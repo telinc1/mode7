@@ -1,4 +1,5 @@
 import {AddEntryInterface} from "./AddEntryInterface";
+import {ColorInterface} from "./ColorInterface";
 import {EntryInterface} from "./EntryInterface";
 
 export class UserInterface {
@@ -6,6 +7,7 @@ export class UserInterface {
         this.simulator = simulator;
         this.entries = [];
         this.add = null;
+        this.colors = [];
 
         window.ui = this;
     }
@@ -24,6 +26,13 @@ export class UserInterface {
 
         this.add = new AddEntryInterface(this);
         this.add.addToDOM();
+
+        Object.keys(this.simulator.colors).forEach((key) => {
+            const ui = new ColorInterface(this, key);
+            ui.addToDOM();
+
+            this.colors.push(ui);
+        });
 
         this.entries[0].onItemClick(null, true);
     }
