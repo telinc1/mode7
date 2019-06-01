@@ -10,9 +10,9 @@ import {Sine} from "../../math/functions/Sine";
 
 const LIST_ITEM = `<span class="list-group-item list-group-item-action pointer">
     For <input type="number" min="1" max="256" class="scanlines form-control d-inline w-25"> <span class="scanline-label">scanlines</span>
-    <span class="float-right ml-3 pointer remove"><i class="fas fa-times"></i></span>
-    <span class="float-right ml-3 pointer down"><i class="fas fa-arrow-down"></i></span>
-    <span class="float-right ml-3 pointer up"><i class="fas fa-arrow-up"></i></span>
+    <span class="float-right ml-3 pointer remove"><svg class="icon" width="12" height="16" viewBox="0 0 12 16"><path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48L7.48 8z"/></svg></span>
+    <span class="float-right ml-3 pointer down"><svg class="icon" width="10" height="16" viewBox="0 0 10 16"><path fill-rule="evenodd" d="M5 11L0 6l1.5-1.5L5 8.25 8.5 4.5 10 6l-5 5z"/></svg></span>
+    <span class="float-right ml-3 pointer up"><svg class="icon" width="10" height="16" viewBox="0 0 10 16"><path fill-rule="evenodd" d="M10 10l-1.5 1.5L5 7.75 1.5 11.5 0 10l5-5 5 5z"/></svg></span>
 </span>`;
 
 const PARAMETER = `<div class="form-group row">

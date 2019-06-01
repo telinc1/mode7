@@ -7,6 +7,11 @@
     flex-basis: auto !important;
 }
 
+svg.icon {
+    display: inline-block;
+    fill: currentColor;
+}
+
 canvas {
     image-rendering: pixelated;
 }
