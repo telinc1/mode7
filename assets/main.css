@@ -89,7 +89,10 @@ canvas {
     cursor: pointer;
 }
 
-[id="padding"] {
+[id="footer"] {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
     height: 224px;
     margin: 1em 0;
 }
